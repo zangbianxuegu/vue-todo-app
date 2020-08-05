@@ -2,14 +2,16 @@ import Vue from 'vue'
 import App from './App.vue'
 import store from './store'
 import router from './router'
-import { Form, Button, Input, Checkbox, Row, Col } from 'ant-design-vue'
+import { FormModel, Button, Input, Checkbox, Row, Col, Icon, Spin } from 'ant-design-vue'
 
 Vue.use(Row)
 Vue.use(Col)
-Vue.use(Form)
+Vue.use(FormModel)
 Vue.use(Input)
 Vue.use(Button)
 Vue.use(Checkbox)
+Vue.use(Icon)
+Vue.use(Spin)
 
 Vue.config.productionTip = false
 

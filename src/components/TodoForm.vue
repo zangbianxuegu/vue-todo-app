@@ -1,20 +1,26 @@
 <template>
   <div class="todo-form">
-    <a-form :form="form" :wrapper-col="{ span: 24 }">
-      <a-form-item label="">
-        <a-textarea
+    <a-form-model
+      ref="form"
+      :model="form"
+      :rules="rules"
+      :wrapper-col="{ span: 24 }"
+    >
+      <a-form-model-item label="" prop="content">
+        <a-input
+          v-model="form.content"
+          type="textarea"
           placeholder="请输入内容"
           :auto-size="{ minRows: 3, maxRows: 6 }"
-          v-model="content"
-          v-decorator="['content', { rules: [{ required: true, message: '请输入内容！' }] }]"
+          @keyup.enter="handleAdd()"
         />
-      </a-form-item>
-      <a-form-item :wrapper-col="{ span: 2, offset: 22 }">
-        <a-button type="primary" html-type="submit" @click="handleAdd()">
+      </a-form-model-item>
+      <a-form-model-item :wrapper-col="{ span: 24 }">
+        <a-button type="primary" @click="handleAdd()">
           添加
         </a-button>
-      </a-form-item>
-    </a-form>
+      </a-form-model-item>
+    </a-form-model>
   </div>
 </template>
 
@@ -23,18 +29,31 @@ export default {
   name: 'TodoForm',
   data() {
     return {
-      content: '',
+      form: {
+        content: '',
+      },
+      rules: {
+        content: [
+          { required: true, message: '请输入 TODO 内容', trigger: 'blur' },
+        ],
+      },
     }
   },
-  components: {},
-  beforeCreate() {
-    this.form = this.$form.createForm(this, {})
+  // computed: {
+  //   'form.content': function() {
+  //     return this.$store.getters.newTodo
+  //   },
+  // },
+  watch: {
+    '$store.state.newTodo': function(val, oldVal) {
+      this.form.content = ''
+    },
   },
   methods: {
     handleAdd() {
-      this.form.validateFields((err, values) => {
-        if (!err) {
-          this.$emit('add', this.content)
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          this.$emit('add', this.form.content)
         }
       })
     },

@@ -1,0 +1,14 @@
+{
+  "list": [
+    {
+      "content": "Learn JavaScript",
+      "completed": false,
+      "id": "7184970827"
+    },
+    {
+      "content": "Learn vue and vuex",
+      "completed": false,
+      "id": "8490370576"
+    }
+  ]
+}

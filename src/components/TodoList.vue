@@ -2,21 +2,29 @@
   <div class="todo-list">
     <ul>
       <li
-        v-for="(item, index) in list"
+        v-for="item in list"
         :key="item.id"
         :class="[{ 'todo-item--completed': item.completed }, 'todo-item']"
       >
         <a-row>
           <a-col :span="2">
-            <a-checkbox @change="handleComplete(index)"></a-checkbox>
+            <a-checkbox
+              @change="handleComplete(item)"
+              :checked="item.completed"
+            ></a-checkbox>
           </a-col>
           <a-col :span="20">
             <p>{{ item.content }}</p>
           </a-col>
           <a-col :span="2">
-            <a-button type="danger" size="small" @click="handleDelete(index)">
-              X
-            </a-button>
+            <a-icon
+              type="close-circle"
+              theme="twoTone"
+              twoToneColor="#ff4d4f"
+              class="todo-close"
+              :style="{ fontSize: '20px', cursor: 'pointer' }"
+              @click="handleRemove(item)"
+            />
           </a-col>
         </a-row>
       </li>
@@ -36,18 +44,19 @@ export default {
     return {}
   },
   methods: {
-    handleComplete(index) {
-      this.$emit('complete', index)
+    handleComplete(item) {
+      this.$emit('complete', item)
     },
-    handleDelete(index) {
-      this.$emit('delete', index)
+    handleRemove(item) {
+      this.$emit('remove', item)
     },
   },
 }
 </script>
 
 <style scoped less>
-ul, li {
+ul,
+li {
   margin: 0;
   padding: 0;
 }

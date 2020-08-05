@@ -2,7 +2,14 @@
   <div class="todo">
     <h1>{{ title }}</h1>
     <TodoForm @add="handleAdd($event)"></TodoForm>
-    <TodoList :list="list" @delete="handleDelete($event)" @complete="handleComplete"></TodoList>
+    <a-spin :spinning="spinning">
+      <a-icon slot="indicator" type="loading" style="font-size: 24px" spin />
+      <TodoList
+        :list="list"
+        @remove="handleRemove($event)"
+        @complete="handleComplete"
+      ></TodoList>
+    </a-spin>
   </div>
 </template>
 
@@ -12,44 +19,39 @@ import TodoList from '@/components/TodoList.vue'
 export default {
   name: 'Todo',
   props: {
-    title: String
+    title: String,
   },
   components: {
     TodoForm,
     TodoList,
   },
   data() {
-    return {
-      list: [
-        {
-          id: '1',
-          content: 'TODO1',
-          completed: false,
-        },
-        {
-          id: '2',
-          content: 'TODO2TODO2TODO2TODO2TODO2',
-          completed: false,
-        }
-      ],
-    }
+    return {}
+  },
+  created() {
+    this.$store.dispatch('loadList')
+  },
+  computed: {
+    spinning() {
+      return this.$store.getters.loading
+    },
+    list() {
+      return this.$store.getters.list
+    },
   },
   methods: {
     handleAdd(content) {
-      console.log(content)
-      this.list = [{
-        id: Math.random(),
-        content: content,
-        completed: false,
-      }, ...this.list]
+      this.$store.dispatch('setNewTodo', content)
+      this.$store.dispatch('addTodo')
+      // this.$store.dispatch('clearNewTodo')
     },
-    handleComplete(index) {
-      this.list[index].completed = !this.list[index].completed
+    handleComplete(todo) {
+      this.$store.dispatch('completeTodo', todo)
     },
-    handleDelete(index) {
-      this.list.splice(index, 1)
-    }
-  }
+    handleRemove(todo) {
+      this.$store.dispatch('removeTodo', todo)
+    },
+  },
 }
 </script>
 
@@ -57,6 +59,6 @@ export default {
 <style scoped>
 .todo {
   max-width: 600px;
-  margin: 0 auto;
+  margin: 20px auto;
 }
 </style>
